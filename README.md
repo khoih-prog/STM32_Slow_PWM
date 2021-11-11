@@ -28,15 +28,19 @@
   * [1. Init Hardware Timer](#1-init-hardware-timer)
   * [2. Set PWM Frequency, dutycycle, attach irqCallbackStartFunc and irqCallbackStopFunc functions](#2-Set-PWM-Frequency-dutycycle-attach-irqCallbackStartFunc-and-irqCallbackStopFunc-functions)
 * [Examples](#examples)
-  * [  1. ISR_16_PWMs_Array](examples/ISR_16_PWMs_Array)
-  * [  2. ISR_16_PWMs_Array_Complex](examples/ISR_16_PWMs_Array_Complex)
-  * [  3. ISR_16_PWMs_Array_Simple](examples/ISR_16_PWMs_Array_Simple)
+  * [ 1. ISR_16_PWMs_Array](examples/ISR_16_PWMs_Array)
+  * [ 2. ISR_16_PWMs_Array_Complex](examples/ISR_16_PWMs_Array_Complex)
+  * [ 3. ISR_16_PWMs_Array_Simple](examples/ISR_16_PWMs_Array_Simple)
+  * [ 4. ISR_Changing_PWM](examples/ISR_Changing_PWM)
+  * [ 5. ISR_Modify_PWM](examples/ISR_Modify_PWM)
 * [Example ISR_16_PWMs_Array_Complex](#Example-ISR_16_PWMs_Array_Complex)
 * [Debug Terminal Output Samples](#debug-terminal-output-samples)
   * [1. ISR_16_PWMs_Array_Complex on NUCLEO_H743ZI2](#1-ISR_16_PWMs_Array_Complex-on-NUCLEO_H743ZI2)
   * [2. ISR_16_PWMs_Array_Complex on NUCLEO_F767ZI](#2-ISR_16_PWMs_Array_Complex-on-NUCLEO_F767ZI)
   * [3. ISR_16_PWMs_Array_Complex on NUCLEO_L552ZE_Q](#3-ISR_16_PWMs_Array_Complex-on-NUCLEO_L552ZE_Q)
   * [4. ISR_16_PWMs_Array_Complex on BLUEPILL_F103CB](#4-ISR_16_PWMs_Array_Complex-on-BLUEPILL_F103CB)
+  * [5. ISR_Modify_PWM on NUCLEO_F767ZI](#5-ISR_Modify_PWM-on-NUCLEO_F767ZI)
+  * [6. ISR_Changing_PWM on NUCLEO_F767ZI](#6-ISR_Changing_PWM-on-NUCLEO_F767ZI)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
@@ -54,7 +58,7 @@
 
 ### Features
 
-This library enables you to use Hardware Timers on **STM32F/L/H/G/WB/MP1 boards** such as NUCLEO_H743ZI2, NUCLEO_L552ZE_Q, NUCLEO_F767ZI, BLUEPILL_F103CB, etc., to create and output PWM to pins. Because this library doesn't use the powerful hardware-controlled PWM with limitations, the maximum PWM frequency is currently limited at **1000Hz**, which is suitable for many real-life applications.
+This library enables you to use Hardware Timers on **STM32F/L/H/G/WB/MP1 boards** such as NUCLEO_H743ZI2, NUCLEO_L552ZE_Q, NUCLEO_F767ZI, BLUEPILL_F103CB, etc., to create and output PWM to pins. Because this library doesn't use the powerful hardware-controlled PWM with limitations, the maximum PWM frequency is currently limited at **1000Hz**, which is suitable for many real-life applications. Now you can also modify PWM settings on-the-fly.
 
 ---
 
@@ -115,7 +119,7 @@ The catch is **your function is now part of an ISR (Interrupt Service Routine), 
 ## Prerequisites
 
  1. [`Arduino IDE 1.8.16+` for Arduino](https://www.arduino.cc/en/Main/Software)
- 2. [`Arduino Core for STM32 v2.0.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32F/L/H/G/WB/MP1 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
+ 2. [`Arduino Core for STM32 v2.1.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32F/L/H/G/WB/MP1 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
 
  3. To use with certain example
    - [`SimpleTimer library`](https://github.com/jfturcot/SimpleTimer) for [ISR_16_Timers_Array example](examples/ISR_16_Timers_Array).
@@ -346,7 +350,9 @@ void setup()
 
  1. [ISR_16_PWMs_Array](examples/ISR_16_PWMs_Array)
  2. [ISR_16_PWMs_Array_Complex](examples/ISR_16_PWMs_Array_Complex)
- 3. [ISR_16_PWMs_Array_Simple](examples/ISR_16_PWMs_Array_Simple) 
+ 3. [ISR_16_PWMs_Array_Simple](examples/ISR_16_PWMs_Array_Simple)
+ 4. [ISR_Changing_PWM](examples/ISR_Changing_PWM)
+ 5. [ISR_Modify_PWM](examples/ISR_Modify_PWM)
 
  
 ---
@@ -499,12 +505,11 @@ uint32_t PWM_Period[NUMBER_ISR_PWMS] =
    111111L,   100000L,    66667L,    50000L,    40000L,   33333L,     25000L,    20000L
 };
 
-
 // You can assign any interval for any timer here, in Hz
-uint32_t PWM_Freq[NUMBER_ISR_PWMS] =
+double PWM_Freq[NUMBER_ISR_PWMS] =
 {
-  1,  2,  3,  4,  5,  6,  7,  8,
-  9, 10, 15, 20, 25, 30, 40, 50
+  1.0f,  2.0f,  3.0f,  4.0f,  5.0f,  6.0f,  7.0f,  8.0f,
+  9.0f, 10.0f, 15.0f, 20.0f, 25.0f, 30.0f, 40.0f, 50.0f
 };
 
 // You can assign any interval for any timer here, in milliseconds
@@ -937,12 +942,12 @@ void loop()
 
 ### 1. ISR_16_PWMs_Array_Complex on NUCLEO_H743ZI2
 
-The following is the sample terminal output when running example [ISR_16_PWMs_Array_Complex](examples/ISR_16_PWMs_Array_Complex) on NUCLEO_H743ZI2 to demonstrate how to use multiple PWM channels with complex callback functions, the accuracy of ISR Hardware PWM-channels, **especially when system is very busy**.  The ISR PWM-channels is **running exactly according to corresponding programmed periods and duty-cycles**
+The following is the sample terminal output when running example [ISR_16_PWMs_Array_Complex](examples/ISR_16_PWMs_Array_Complex) on **NUCLEO_H743ZI2** to demonstrate how to use multiple PWM channels with complex callback functions, the accuracy of ISR Hardware PWM-channels, **especially when system is very busy**.  The ISR PWM-channels is **running exactly according to corresponding programmed periods and duty-cycles**
 
 
 ```
 Starting ISR_16_PWMs_Array_Complex on NUCLEO_H743ZI2
-STM32_SLOW_PWM v1.0.0
+STM32_SLOW_PWM v1.1.0
 [PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 240000000
 [PWM] Frequency = 1000000.00 , _count = 20
 Starting ITimer OK, micros() = 2015843
@@ -1002,12 +1007,12 @@ PWM Channel : 15, programmed Period (us): 20000, actual : 20000, programmed Duty
 
 ### 2. ISR_16_PWMs_Array_Complex on NUCLEO_F767ZI
 
-The following is the sample terminal output when running example [ISR_16_PWMs_Array_Complex](examples/ISR_16_PWMs_Array_Complex) on NUCLEO_F767ZI to demonstrate how to use multiple PWM channels with complex callback functions, the accuracy of ISR Hardware PWM-channels, **especially when system is very busy**.  The ISR PWM-channels is **running exactly according to corresponding programmed periods and duty-cycles**
+The following is the sample terminal output when running example [ISR_16_PWMs_Array_Complex](examples/ISR_16_PWMs_Array_Complex) on **NUCLEO_F767ZI** to demonstrate how to use multiple PWM channels with complex callback functions, the accuracy of ISR Hardware PWM-channels, **especially when system is very busy**.  The ISR PWM-channels is **running exactly according to corresponding programmed periods and duty-cycles**
 
 
 ```
 Starting ISR_16_PWMs_Array_Complex on NUCLEO_F767ZI
-STM32_SLOW_PWM v1.0.0
+STM32_SLOW_PWM v1.1.0
 [PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 216000000
 [PWM] Frequency = 1000000.00 , _count = 20
 Starting ITimer OK, micros() = 2015789
@@ -1067,12 +1072,12 @@ PWM Channel : 15, programmed Period (us): 20000, actual : 20000, programmed Duty
 
 ### 3. ISR_16_PWMs_Array_Complex on NUCLEO_L552ZE_Q
 
-The following is the sample terminal output when running example [ISR_16_PWMs_Array_Complex](examples/ISR_16_PWMs_Array_Complex) on NUCLEO_L552ZE_Q to demonstrate how to use multiple PWM channels with complex callback functions, the accuracy of ISR Hardware PWM-channels, **especially when system is very busy**.  The ISR PWM-channels is **running exactly according to corresponding programmed periods and duty-cycles**
+The following is the sample terminal output when running example [ISR_16_PWMs_Array_Complex](examples/ISR_16_PWMs_Array_Complex) on **NUCLEO_L552ZE_Q** to demonstrate how to use multiple PWM channels with complex callback functions, the accuracy of ISR Hardware PWM-channels, **especially when system is very busy**.  The ISR PWM-channels is **running exactly according to corresponding programmed periods and duty-cycles**
 
 
 ```
 Starting ISR_16_PWMs_Array_Complex on NUCLEO_L552ZE_Q
-STM32_SLOW_PWM v1.0.0
+STM32_SLOW_PWM v1.1.0
 [PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 110000000
 [PWM] Frequency = 1000000.00 , _count = 20
 Starting ITimer OK, micros() = 2016141
@@ -1132,12 +1137,12 @@ PWM Channel : 15, programmed Period (us): 20000, actual : 20000, programmed Duty
 
 ### 4. ISR_16_PWMs_Array_Complex on BLUEPILL_F103CB
 
-The following is the sample terminal output when running example [ISR_16_PWMs_Array_Complex](examples/ISR_16_PWMs_Array_Complex) on BLUEPILL_F103CB to demonstrate how to use multiple PWM channels with complex callback functions, the accuracy of ISR Hardware PWM-channels, **especially when system is very busy**.  The ISR PWM-channels is **running exactly according to corresponding programmed periods and duty-cycles**
+The following is the sample terminal output when running example [ISR_16_PWMs_Array_Complex](examples/ISR_16_PWMs_Array_Complex) on **BLUEPILL_F103CB** to demonstrate how to use multiple PWM channels with complex callback functions, the accuracy of ISR Hardware PWM-channels, **especially when system is very busy**.  The ISR PWM-channels is **running exactly according to corresponding programmed periods and duty-cycles**
 
 
 ```
 Starting ISR_16_PWMs_Array_Complex on BLUEPILL_F103CB
-STM32_SLOW_PWM v1.0.0
+STM32_SLOW_PWM v1.1.0
 [PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 72000000
 [PWM] Frequency = 1000000.00 , _count = 20
 Starting ITimer OK, micros() = 3390333
@@ -1193,6 +1198,52 @@ PWM Channel : 14, programmed Period (us): 25000, actual : 24988, programmed Duty
 PWM Channel : 15, programmed Period (us): 20000, actual : 19984, programmed DutyCycle : 95, actual : 95.00
 ```
 
+---
+
+### 5. ISR_Modify_PWM on NUCLEO_F767ZI
+
+The following is the sample terminal output when running example [ISR_Modify_PWM](examples/ISR_Modify_PWM) on **NUCLEO_F767ZI** to demonstrate how to modify PWM settings on-the-fly without deleting the PWM channel
+
+```
+Starting ISR_Modify_PWM on NUCLEO_F767ZI
+STM32_SLOW_PWM v1.1.0
+[PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 216000000
+[PWM] Frequency = 1000000.00 , _count = 20
+Starting ITimer OK, micros() = 2010993
+Using PWM Freq = 1.00, PWM DutyCycle = 10
+Channel : 0	Period : 1000000		OnTime : 100000	Start_Time : 2016713
+Channel : 0	Period : 500000		OnTime : 450000	Start_Time : 12028002
+Channel : 0	Period : 1000000		OnTime : 100000	Start_Time : 22029002
+Channel : 0	Period : 500000		OnTime : 450000	Start_Time : 32030001
+Channel : 0	Period : 1000000		OnTime : 100000	Start_Time : 42031001
+Channel : 0	Period : 500000		OnTime : 450000	Start_Time : 52032001
+Channel : 0	Period : 1000000		OnTime : 100000	Start_Time : 62033001
+Channel : 0	Period : 500000		OnTime : 450000	Start_Time : 72034001
+Channel : 0	Period : 1000000		OnTime : 100000	Start_Time : 82035001
+Channel : 0	Period : 500000		OnTime : 450000	Start_Time : 92036002
+Channel : 0	Period : 1000000		OnTime : 100000	Start_Time : 102037001
+```
+
+---
+
+### 6. ISR_Changing_PWM on NUCLEO_F767ZI
+
+The following is the sample terminal output when running example [ISR_Changing_PWM](examples/ISR_Changing_PWM) on **NUCLEO_F767ZI** to demonstrate how to modify PWM settings on-the-fly by deleting the PWM channel and reinit the PWM channel
+
+```
+Starting ISR_Changing_PWM on NUCLEO_F767ZI
+STM32_SLOW_PWM v1.1.0
+[PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 216000000
+[PWM] Frequency = 1000000.00 , _count = 20
+Starting ITimer OK, micros() = 2010992
+Using PWM Freq = 1.00, PWM DutyCycle = 50
+Channel : 0	Period : 1000000		OnTime : 500000	Start_Time : 2022102
+Using PWM Freq = 2.00, PWM DutyCycle = 90
+Channel : 0	Period : 500000		OnTime : 450000	Start_Time : 12027024
+Using PWM Freq = 1.00, PWM DutyCycle = 50
+Channel : 0	Period : 1000000		OnTime : 500000	Start_Time : 22032024
+```
+
 
 ---
 ---
@@ -1237,6 +1288,7 @@ Submit issues to: [STM32_Slow_PWM issues](https://github.com/khoih-prog/STM32_Sl
 
 1. Basic hardware multi-channel PWM for **STM32F/L/H/G/WB/MP1 boards** such as NUCLEO_H743ZI2, NUCLEO_L552ZE_Q, NUCLEO_F767ZI, BLUEPILL_F103CB, etc., using [`Arduino Core for STM32`](https://github.com/stm32duino/Arduino_Core_STM32)
 2. Add Table of Contents
+3. Add functions to modify PWM settings on-the-fly
 
 ---
 ---
