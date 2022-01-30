@@ -408,6 +408,9 @@ void setup()
 #define _PWM_LOGLEVEL_      4
 
 #define USING_MICROS_RESOLUTION       true    //false
+
+// Default is true, uncomment to false
+//#define CHANGING_PWM_END_OF_CYCLE     false
   
 #define MAX_STM32_PWM_FREQ            1000
 
@@ -982,7 +985,7 @@ The following is the sample terminal output when running example [ISR_16_PWMs_Ar
 
 ```
 Starting ISR_16_PWMs_Array_Complex on NUCLEO_H743ZI2
-STM32_SLOW_PWM v1.2.0
+STM32_SLOW_PWM v1.2.1
 [PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 240000000
 [PWM] Frequency = 1000000.00 , _count = 20
 Starting ITimer OK, micros() = 2015843
@@ -1047,7 +1050,7 @@ The following is the sample terminal output when running example [ISR_16_PWMs_Ar
 
 ```
 Starting ISR_16_PWMs_Array_Complex on NUCLEO_F767ZI
-STM32_SLOW_PWM v1.2.0
+STM32_SLOW_PWM v1.2.1
 [PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 216000000 , Timer Clock Frequency = 1000000.00
 [PWM] Timer Frequency = 50000.00 , _count = 20
 Starting ITimer OK, micros() = 2016553
@@ -1112,7 +1115,7 @@ The following is the sample terminal output when running example [ISR_16_PWMs_Ar
 
 ```
 Starting ISR_16_PWMs_Array_Complex on NUCLEO_L552ZE_Q
-STM32_SLOW_PWM v1.1.0
+STM32_SLOW_PWM v1.2.1
 [PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 110000000
 [PWM] Frequency = 1000000.00 , _count = 20
 Starting ITimer OK, micros() = 2016141
@@ -1177,7 +1180,7 @@ The following is the sample terminal output when running example [ISR_16_PWMs_Ar
 
 ```
 Starting ISR_16_PWMs_Array_Complex on BLUEPILL_F103CB
-STM32_SLOW_PWM v1.1.0
+STM32_SLOW_PWM v1.2.1
 [PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 72000000
 [PWM] Frequency = 1000000.00 , _count = 20
 Starting ITimer OK, micros() = 3390333
@@ -1241,7 +1244,7 @@ The following is the sample terminal output when running example [ISR_Modify_PWM
 
 ```
 Starting ISR_Modify_PWM on NUCLEO_F767ZI
-STM32_SLOW_PWM v1.2.0
+STM32_SLOW_PWM v1.2.1
 [PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 216000000 , Timer Clock Frequency = 1000000.00
 [PWM] Timer Frequency = 50000.00 , _count = 20
 Starting ITimer OK, micros() = 2016545
@@ -1264,7 +1267,7 @@ The following is the sample terminal output when running example [ISR_Changing_P
 
 ```
 Starting ISR_Changing_PWM on NUCLEO_F767ZI
-STM32_SLOW_PWM v1.2.0
+STM32_SLOW_PWM v1.2.1
 [PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 216000000 , Timer Clock Frequency = 1000000.00
 [PWM] Timer Frequency = 50000.00 , _count = 20
 Starting ITimer OK, micros() = 2016547
@@ -1334,7 +1337,7 @@ Submit issues to: [STM32_Slow_PWM issues](https://github.com/khoih-prog/STM32_Sl
 6. Improve accuracy by using `double`, instead of `uint32_t` for `dutycycle`, `period`. Check [Change Duty Cycle #1](https://github.com/khoih-prog/ESP8266_PWM/issues/1#issuecomment-1024969658)
 7. Optimize library code by using `reference-passing` instead of `value-passing`
 8. Fix reattachInterrupt() bug. Check [bugfix: reattachInterrupt() pass wrong frequency value to setFrequency() #19](https://github.com/khoih-prog/ESP8266TimerInterrupt/pull/19)
- 
+9. DutyCycle to be optionally updated at the end current PWM period instead of immediately
  
 ---
 ---

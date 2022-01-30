@@ -12,13 +12,14 @@
   Therefore, their executions are not blocked by bad-behaving functions / tasks.
   This important feature is absolutely necessary for mission-critical tasks.
 
-  Version: 1.2.0
+  Version: 1.2.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0   K.Hoang      22/09/2021 Initial coding for STM32F/L/H/G/WB/MP1
   1.1.0   K Hoang      10/11/2021 Add functions to modify PWM settings on-the-fly
   1.2.0   K Hoang      29/01/2022 Fix multiple-definitions linker error. Improve accuracy
+  1.2.1   K Hoang      30/01/2022 DutyCycle to be updated at the end current PWM period
  *****************************************************************************************************************************/
 
 #pragma once

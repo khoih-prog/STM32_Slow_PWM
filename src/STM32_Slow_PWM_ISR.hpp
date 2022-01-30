@@ -12,13 +12,14 @@
   Therefore, their executions are not blocked by bad-behaving functions / tasks.
   This important feature is absolutely necessary for mission-critical tasks.
 
-  Version: 1.2.0
+  Version: 1.2.1
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0   K.Hoang      22/09/2021 Initial coding for STM32F/L/H/G/WB/MP1
   1.1.0   K Hoang      10/11/2021 Add functions to modify PWM settings on-the-fly
   1.2.0   K Hoang      29/01/2022 Fix multiple-definitions linker error. Improve accuracy
+  1.2.1   K Hoang      30/01/2022 DutyCycle to be updated at the end current PWM period
 *****************************************************************************************************************************/
 
 #pragma once
@@ -41,13 +42,13 @@
 #endif
 
 #ifndef STM32_SLOW_PWM_VERSION
-  #define STM32_SLOW_PWM_VERSION           "STM32_SLOW_PWM v1.2.0"
+  #define STM32_SLOW_PWM_VERSION           "STM32_SLOW_PWM v1.2.1"
   
   #define STM32_SLOW_PWM_VERSION_MAJOR     1
   #define STM32_SLOW_PWM_VERSION_MINOR     2
-  #define STM32_SLOW_PWM_VERSION_PATCH     0
+  #define STM32_SLOW_PWM_VERSION_PATCH     1
 
-  #define STM32_SLOW_PWM_VERSION_INT       1002000
+  #define STM32_SLOW_PWM_VERSION_INT       1002001
 #endif
 
 #ifndef _PWM_LOGLEVEL_
@@ -68,6 +69,11 @@ typedef void (*timer_callback_p)(void *);
 #if !defined(USING_MICROS_RESOLUTION)
   #warning Not USING_MICROS_RESOLUTION, using millis resolution
   #define USING_MICROS_RESOLUTION       false
+#endif
+
+#if !defined(CHANGING_PWM_END_OF_CYCLE)
+  #warning Using default CHANGING_PWM_END_OF_CYCLE == true
+  #define CHANGING_PWM_END_OF_CYCLE     true
 #endif
 
 #define INVALID_STM32_PIN         255
@@ -225,6 +231,11 @@ class STM32_SLOW_PWM_ISR
       ////////////////////////////////////////////////////////////
       
       bool          enabled;            // true if enabled
+      
+      // New from v1.2.1    
+      double        newPeriod;          // period value, in us / ms
+      double        newDutyCycle;       // from 0.00 to 100.00, double precision
+      //////
     } PWM_t;
 
     volatile PWM_t PWM[MAX_NUMBER_CHANNELS];
