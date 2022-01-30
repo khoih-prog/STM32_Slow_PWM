@@ -28,6 +28,7 @@
 
 #define MAX_STM32_PWM_FREQ            1000
 
+// To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include "STM32_Slow_PWM.h"
 
 #define LED_OFF             LOW
@@ -96,31 +97,30 @@ void TimerHandler()
 //////////////////////////////////////////////////////
 
 // You can assign pins here. Be carefull to select good pin to use or crash, e.g pin 6-11
-uint32_t PWM_Pin[NUMBER_ISR_PWMS] =
+uint32_t PWM_Pin[] =
 {
-   LED_BUILTIN,   LED_BLUE,   LED_RED, PIN_D0, PIN_D1,  PIN_D2,  PIN_D3,  PIN_D4,
-         PIN_D5,    PIN_D6,    PIN_D7, PIN_D8, PIN_D9, PIN_D10, PIN_D11, PIN_D12
+   LED_BUILTIN, LED_BLUE, LED_RED, PIN_D0, PIN_D1, PIN_D2,  PIN_D3,  PIN_D4,
+   PIN_D5,      PIN_D6,   PIN_D7,  PIN_D8, PIN_D9, PIN_D10, PIN_D11, PIN_D12
 };
 
 // You can assign any interval for any timer here, in microseconds
-uint32_t PWM_Period[NUMBER_ISR_PWMS] =
+double PWM_Period[] =
 {
-  1000000L,   500000L,   333333L,   250000L,   200000L,   166667L,   142857L,   125000L,
-   111111L,   100000L,    66667L,    50000L,    40000L,   33333L,     25000L,    20000L
-};
+  1000000.0,     500000.0,   333333.333,   250000.0,   200000.0,   166666.667,   142857.143,   125000.0,
+   111111.111,   100000.0,    66666.667,    50000.0,    40000.0,    33333.333,    25000.0,      20000.0};
 
 // You can assign any interval for any timer here, in Hz
-double PWM_Freq[NUMBER_ISR_PWMS] =
+double PWM_Freq[] =
 {
   1.0f,  2.0f,  3.0f,  4.0f,  5.0f,  6.0f,  7.0f,  8.0f,
   9.0f, 10.0f, 15.0f, 20.0f, 25.0f, 30.0f, 40.0f, 50.0f
 };
 
 // You can assign any interval for any timer here, in milliseconds
-uint32_t PWM_DutyCycle[NUMBER_ISR_PWMS] =
+double PWM_DutyCycle[] =
 {
-   5, 10, 20, 30, 40, 45, 50, 55,
-  60, 65, 70, 75, 80, 85, 90, 95
+   5.0, 10.0, 20.0, 30.0, 40.0, 45.0, 50.0, 55.0,
+  60.0, 65.0, 70.0, 75.0, 80.0, 85.0, 90.0, 95.0
 };
 
 typedef void (*irqCallback)  ();
