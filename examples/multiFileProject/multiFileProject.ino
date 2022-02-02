@@ -16,8 +16,8 @@
   #error This code is designed to run on STM32F/L/H/G/WB/MP1 platform! Please check your Tools->Board setting.
 #endif
 
-#define STM32_SLOW_PWM_VERSION_MIN_TARGET      "STM32_SLOW_PWM v1.2.0"
-#define STM32_SLOW_PWM_VERSION_MIN             1002000
+#define STM32_SLOW_PWM_VERSION_MIN_TARGET      "STM32_SLOW_PWM v1.2.2"
+#define STM32_SLOW_PWM_VERSION_MIN             1002002
 
 #include "multiFileProject.h"
 

@@ -12,7 +12,7 @@
   Therefore, their executions are not blocked by bad-behaving functions / tasks.
   This important feature is absolutely necessary for mission-critical tasks.
 
-  Version: 1.2.1
+  Version: 1.2.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -20,6 +20,7 @@
   1.1.0   K Hoang      10/11/2021 Add functions to modify PWM settings on-the-fly
   1.2.0   K Hoang      29/01/2022 Fix multiple-definitions linker error. Improve accuracy
   1.2.1   K Hoang      30/01/2022 DutyCycle to be updated at the end current PWM period
+  1.2.2   K Hoang      01/02/2022 Use float for DutyCycle and Freq, uint32_t for period. Optimize code
 *****************************************************************************************************************************/
 
 #pragma once
@@ -117,7 +118,7 @@ void STM32_SLOW_PWM_ISR::run()
           PWM[channelNum].period    = PWM[channelNum].newPeriod;
           PWM[channelNum].newPeriod = 0;
           
-          PWM[channelNum].onTime  = ( PWM[channelNum].period * PWM[channelNum].newDutyCycle ) / 100;
+          PWM[channelNum].onTime  = PWM[channelNum].newOnTime;
         }
 #endif
       }     
@@ -153,12 +154,12 @@ int8_t STM32_SLOW_PWM_ISR::findFirstFreeSlot()
 
 ///////////////////////////////////////////////////
 
-int8_t STM32_SLOW_PWM_ISR::setupPWMChannel(const uint32_t& pin, const double& period, const double& dutycycle, void* cbStartFunc, void* cbStopFunc)
+int8_t STM32_SLOW_PWM_ISR::setupPWMChannel(const uint32_t& pin, const uint32_t& period, const float& dutycycle, void* cbStartFunc, void* cbStopFunc)
 {
   int8_t channelNum;
   
   // Invalid input, such as period = 0, etc
-  if ( (period <= 0.0) || (dutycycle < 0.0) || (dutycycle > 100.0) )
+  if ( (period == 0) || (dutycycle < 0.0) || (dutycycle > 100.0) )
   {
     PWM_LOGERROR("Error: Invalid period or dutycycle");
     return -1;
@@ -207,10 +208,10 @@ int8_t STM32_SLOW_PWM_ISR::setupPWMChannel(const uint32_t& pin, const double& pe
 
 ///////////////////////////////////////////////////
 
-bool STM32_SLOW_PWM_ISR::modifyPWMChannel_Period(const uint8_t& channelNum, const uint32_t& pin, const double& period, const double& dutycycle)
+bool STM32_SLOW_PWM_ISR::modifyPWMChannel_Period(const uint8_t& channelNum, const uint32_t& pin, const uint32_t& period, const float& dutycycle)
 {
   // Invalid input, such as period = 0, etc
-  if ( (period <= 0.0) || (dutycycle < 0.0) || (dutycycle > 100.0) )
+  if ( (period == 0) || (dutycycle < 0.0) || (dutycycle > 100.0) )
   {
     PWM_LOGERROR("Error: Invalid period or dutycycle");
     return false;
@@ -232,10 +233,11 @@ bool STM32_SLOW_PWM_ISR::modifyPWMChannel_Period(const uint8_t& channelNum, cons
 
   PWM[channelNum].newPeriod     = period;
   PWM[channelNum].newDutyCycle  = dutycycle;
+  PWM[channelNum].newOnTime     = ( period * dutycycle ) / 100;
   
   PWM_LOGDEBUG0("Channel : ");      PWM_LOGDEBUG0(channelNum); 
   PWM_LOGDEBUG0("\tNew Period : "); PWM_LOGDEBUG0(PWM[channelNum].newPeriod);
-  PWM_LOGDEBUG0("\t\tOnTime : ");   PWM_LOGDEBUG0(( period * dutycycle ) / 100); 
+  PWM_LOGDEBUG0("\t\tOnTime : ");   PWM_LOGDEBUG0(PWM[channelNum].newOnTime); 
   PWM_LOGDEBUG0("\tStart_Time : "); PWM_LOGDEBUGLN0(PWM[channelNum].prevTime);
   
 #else
@@ -264,13 +266,8 @@ bool STM32_SLOW_PWM_ISR::modifyPWMChannel_Period(const uint8_t& channelNum, cons
 
 void STM32_SLOW_PWM_ISR::deleteChannel(const uint8_t& channelNum) 
 {
-  if (channelNum >= MAX_NUMBER_CHANNELS) 
-  {
-    return;
-  }
-
   // nothing to delete if no timers are in use
-  if (numChannels == 0) 
+  if ( (channelNum >= MAX_NUMBER_CHANNELS) || (numChannels == 0) )
   {
     return;
   }
