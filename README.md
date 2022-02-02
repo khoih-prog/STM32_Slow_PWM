@@ -510,12 +510,12 @@ typedef struct
   irqCallback   irqCallbackStopFunc;
 
 #if USING_PWM_FREQUENCY  
-  double        PWM_Freq;
+  float         PWM_Freq;
 #else  
-  double        PWM_Period;
+  uint32_t      PWM_Period;
 #endif
   
-  double        PWM_DutyCycle;
+  float         PWM_DutyCycle;
   
   uint64_t      deltaMicrosStart;
   uint64_t      previousMicrosStart;
