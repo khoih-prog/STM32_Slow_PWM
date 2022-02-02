@@ -478,7 +478,7 @@ void simpleTimerDoingSomething2s()
     Serial.print(F(", programmed Period (uS): "));
 
   #if USING_PWM_FREQUENCY
-    Serial.print(1000000.0 / curISR_PWM_Data[i].PWM_Freq);
+    Serial.print(1000000 / curISR_PWM_Data[i].PWM_Freq);
   #else
     Serial.print(curISR_PWM_Data[i].PWM_Period);
   #endif
