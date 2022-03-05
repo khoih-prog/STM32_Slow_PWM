@@ -12,7 +12,7 @@
   Therefore, their executions are not blocked by bad-behaving functions / tasks.
   This important feature is absolutely necessary for mission-critical tasks.
 
-  Version: 1.2.2
+  Version: 1.2.3
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -21,6 +21,7 @@
   1.2.0   K Hoang      29/01/2022 Fix multiple-definitions linker error. Improve accuracy
   1.2.1   K Hoang      30/01/2022 DutyCycle to be updated at the end current PWM period
   1.2.2   K Hoang      01/02/2022 Use float for DutyCycle and Freq, uint32_t for period. Optimize code
+  1.2.3   K Hoang      03/03/2022 Fix `DutyCycle` and `New Period` display bugs. Display warning only when debug level > 3
 *****************************************************************************************************************************/
 
 #pragma once
@@ -194,10 +195,10 @@ int8_t STM32_SLOW_PWM_ISR::setupPWMChannel(const uint32_t& pin, const uint32_t& 
   PWM[channelNum].callbackStart = cbStartFunc;
   PWM[channelNum].callbackStop  = cbStopFunc;
   
-  PWM_LOGDEBUG0("Channel : ");      PWM_LOGDEBUG0(channelNum); 
-  PWM_LOGDEBUG0("\t    Period : "); PWM_LOGDEBUG0(PWM[channelNum].period);
-  PWM_LOGDEBUG0("\t\tOnTime : ");   PWM_LOGDEBUG0(PWM[channelNum].onTime); 
-  PWM_LOGDEBUG0("\tStart_Time : "); PWM_LOGDEBUGLN0(PWM[channelNum].prevTime);
+  PWM_LOGINFO0("Channel : ");      PWM_LOGINFO0(channelNum); 
+  PWM_LOGINFO0("\t    Period : "); PWM_LOGINFO0(PWM[channelNum].period);
+  PWM_LOGINFO0("\t\tOnTime : ");   PWM_LOGINFO0(PWM[channelNum].onTime); 
+  PWM_LOGINFO0("\tStart_Time : "); PWM_LOGINFOLN0(PWM[channelNum].prevTime);
  
   numChannels++;
   
@@ -235,10 +236,10 @@ bool STM32_SLOW_PWM_ISR::modifyPWMChannel_Period(const uint8_t& channelNum, cons
   PWM[channelNum].newDutyCycle  = dutycycle;
   PWM[channelNum].newOnTime     = ( period * dutycycle ) / 100;
   
-  PWM_LOGDEBUG0("Channel : ");      PWM_LOGDEBUG0(channelNum); 
-  PWM_LOGDEBUG0("\tNew Period : "); PWM_LOGDEBUG0(PWM[channelNum].newPeriod);
-  PWM_LOGDEBUG0("\t\tOnTime : ");   PWM_LOGDEBUG0(PWM[channelNum].newOnTime); 
-  PWM_LOGDEBUG0("\tStart_Time : "); PWM_LOGDEBUGLN0(PWM[channelNum].prevTime);
+  PWM_LOGINFO0("Channel : ");      PWM_LOGINFO0(channelNum); 
+  PWM_LOGINFO0("\t    Period : "); PWM_LOGINFO0(period);
+  PWM_LOGINFO0("\t\tOnTime : ");   PWM_LOGINFO0(PWM[channelNum].newOnTime); 
+  PWM_LOGINFO0("\tStart_Time : "); PWM_LOGINFOLN0(PWM[channelNum].prevTime);
   
 #else
 
@@ -251,10 +252,10 @@ bool STM32_SLOW_PWM_ISR::modifyPWMChannel_Period(const uint8_t& channelNum, cons
   
   PWM[channelNum].prevTime      = timeNow();
    
-  PWM_LOGDEBUG0("Channel : ");      PWM_LOGDEBUG0(channelNum); 
-  PWM_LOGDEBUG0("\t    Period : "); PWM_LOGDEBUG0(PWM[channelNum].period);
-  PWM_LOGDEBUG0("\t\tOnTime : ");   PWM_LOGDEBUG0(PWM[channelNum].onTime); 
-  PWM_LOGDEBUG0("\tStart_Time : "); PWM_LOGDEBUGLN0(PWM[channelNum].prevTime);
+  PWM_LOGINFO0("Channel : ");      PWM_LOGINFO0(channelNum); 
+  PWM_LOGINFO0("\t    Period : "); PWM_LOGINFO0(PWM[channelNum].period);
+  PWM_LOGINFO0("\t\tOnTime : ");   PWM_LOGINFO0(PWM[channelNum].onTime); 
+  PWM_LOGINFO0("\tStart_Time : "); PWM_LOGINFOLN0(PWM[channelNum].prevTime);
   
 #endif
   
