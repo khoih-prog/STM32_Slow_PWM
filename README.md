@@ -2,12 +2,16 @@
 
 [![arduino-library-badge](https://www.ardu-badge.com/badge/STM32_Slow_PWM.svg?)](https://www.ardu-badge.com/STM32_Slow_PWM)
 [![GitHub release](https://img.shields.io/github/release/khoih-prog/STM32_Slow_PWM.svg)](https://github.com/khoih-prog/STM32_Slow_PWM/releases)
-[![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/khoih-prog/STM32_Slow_PWM/blob/master/LICENSE)
+[![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/khoih-prog/STM32_Slow_PWM/blob/main/LICENSE)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](#Contributing)
 [![GitHub issues](https://img.shields.io/github/issues/khoih-prog/STM32_Slow_PWM.svg)](http://github.com/khoih-prog/STM32_Slow_PWM/issues)
 
+
 <a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Donate to my libraries using BuyMeACoffee" style="height: 50px !important;width: 181px !important;" ></a>
 <a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-orange.svg?logo=buy-me-a-coffee&logoColor=FFDD00" style="height: 20px !important;width: 200px !important;" ></a>
+<a href="https://profile-counter.glitch.me/khoih-prog/count.svg" title="Total khoih-prog Visitor count"><img src="https://profile-counter.glitch.me/khoih-prog/count.svg" style="height: 30px;width: 200px;"></a>
+<a href="https://profile-counter.glitch.me/khoih-prog-STM32_Slow_PWM/count.svg" title="STM32_Slow_PWM Visitor count"><img src="https://profile-counter.glitch.me/khoih-prog-STM32_Slow_PWM/count.svg" style="height: 30px;width: 200px;"></a>
+
 
 ---
 ---
@@ -69,7 +73,7 @@ As more complex calculation and check **inside ISR** are introduced from v1.2.0,
 You can modify to use larger `HW_TIMER_INTERVAL_US`, (from current 20uS), according to your board and use-case if crash happens.
 
 
-```
+```cpp
 // Current 20uS
 #define HW_TIMER_INTERVAL_US      20L
 ```
@@ -143,8 +147,7 @@ The catch is **your function is now part of an ISR (Interrupt Service Routine), 
 ## Prerequisites
 
  1. [`Arduino IDE 1.8.19+` for Arduino](https://github.com/arduino/Arduino). [![GitHub release](https://img.shields.io/github/release/arduino/Arduino.svg)](https://github.com/arduino/Arduino/releases/latest)
- 2. [`Arduino Core for STM32 v2.2.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32F/L/H/G/WB/MP1 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
-
+ 2. [`Arduino Core for STM32 v2.3.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32F/L/H/G/WB/MP1 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
  3. To use with certain example
    - [`SimpleTimer library`](https://github.com/jfturcot/SimpleTimer) for [ISR_16_Timers_Array example](examples/ISR_16_Timers_Array).
 ---
@@ -162,9 +165,9 @@ You can also use this link [![arduino-library-badge](https://www.ardu-badge.com/
 Another way to install is to:
 
 1. Navigate to [**STM32_Slow_PWM**](https://github.com/khoih-prog/STM32_Slow_PWM) page.
-2. Download the latest release `STM32_Slow_PWM-master.zip`.
-3. Extract the zip file to `STM32_Slow_PWM-master` directory 
-4. Copy whole `STM32_Slow_PWM-master` folder to Arduino libraries' directory such as `~/Arduino/libraries/`.
+2. Download the latest release `STM32_Slow_PWM-main.zip`.
+3. Extract the zip file to `STM32_Slow_PWM-main` directory 
+4. Copy whole `STM32_Slow_PWM-main` folder to Arduino libraries' directory such as `~/Arduino/libraries/`.
 
 ### VS Code & PlatformIO
 
@@ -182,14 +185,14 @@ The current library implementation, using `xyz-Impl.h` instead of standard `xyz.
 
 You can include this `.hpp` file
 
-```
+```cpp
 // Can be included as many times as necessary, without `Multiple Definitions` Linker Error
 #include "STM32_Slow_PWM.hpp"     //https://github.com/khoih-prog/STM32_Slow_PWM
 ```
 
 in many files. But be sure to use the following `.h` file **in just 1 `.h`, `.cpp` or `.ino` file**, which must **not be included in any other file**, to avoid `Multiple Definitions` Linker Error
 
-```
+```cpp
 // To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include "STM32_Slow_PWM.h"           //https://github.com/khoih-prog/STM32_Slow_PWM
 ```
@@ -223,7 +226,7 @@ For example, **STM32F103C8T6** has one advance timer, while **STM32F103VET6** ha
 
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/STM32_TimerInterrupt/blob/main/pics/STM32Timers.png">
+    <img src="https://github.com/khoih-prog/STM32_TimerInterrupt/raw/main/pics/STM32Timers.png">
 </p>
 
 
@@ -235,7 +238,7 @@ To be sure which Timer is available for the board you're using, check the Core P
 
 The information will be as follows:
 
-```
+```cpp
 typedef struct
 {
   __IO uint32_t CR1;         /*!< TIM control register 1,              Address offset: 0x00 */
@@ -270,7 +273,7 @@ typedef struct
 
 and
 
-```
+```cpp
 #define PERIPH_BASE            0x40000000UL /*!< Base address of : AHB/ABP Peripherals   
 /*!< Peripheral memory map */
 #define APB1PERIPH_BASE        PERIPH_BASE
@@ -351,7 +354,7 @@ Before using any Timer for a PWM channel, you have to make sure the Timer has no
 
 #### 1. Init Hardware Timer
 
-```
+```cpp
 // Depending on the board, you can select STM32H7 Hardware Timer from TIM1-TIM22
 // If you select a Timer not correctly, you'll get a message from compiler
 // 'TIMxx' was not declared in this scope; did you mean 'TIMyy'? 
@@ -370,7 +373,7 @@ STM32_Slow_PWM ISR_PWM;
 
 #### 2. Set PWM Frequency, dutycycle, attach irqCallbackStartFunc and irqCallbackStopFunc functions
 
-```
+```cpp
 void irqCallbackStartFunc()
 {
 
@@ -423,7 +426,7 @@ https://github.com/khoih-prog/STM32_Slow_PWM/blob/5ff2144a1665df2d8ff6409fd9c425
 The following is the sample terminal output when running example [ISR_16_PWMs_Array_Complex](examples/ISR_16_PWMs_Array_Complex) on **NUCLEO_H743ZI2** to demonstrate how to use multiple PWM channels with complex callback functions, the accuracy of ISR Hardware PWM-channels, **especially when system is very busy**.  The ISR PWM-channels is **running exactly according to corresponding programmed periods and duty-cycles**
 
 
-```
+```cpp
 Starting ISR_16_PWMs_Array_Complex on NUCLEO_H743ZI2
 STM32_SLOW_PWM v1.2.3
 [PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 240000000
@@ -488,7 +491,7 @@ PWM Channel : 15, programmed Period (uS): 20000, actual (uS) : 20000, programmed
 The following is the sample terminal output when running example [ISR_16_PWMs_Array_Complex](examples/ISR_16_PWMs_Array_Complex) on **NUCLEO_F767ZI** to demonstrate how to use multiple PWM channels with complex callback functions, the accuracy of ISR Hardware PWM-channels, **especially when system is very busy**.  The ISR PWM-channels is **running exactly according to corresponding programmed periods and duty-cycles**
 
 
-```
+```cpp
 Starting ISR_16_PWMs_Array_Complex on NUCLEO_F767ZI
 STM32_SLOW_PWM v1.2.3
 [PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 216000000 , Timer Clock Frequency = 1000000.00
@@ -553,7 +556,7 @@ PWM Channel : 15, programmed Period (uS): 20000.00, actual (uS) : 20000, program
 The following is the sample terminal output when running example [ISR_16_PWMs_Array_Complex](examples/ISR_16_PWMs_Array_Complex) on **NUCLEO_L552ZE_Q** to demonstrate how to use multiple PWM channels with complex callback functions, the accuracy of ISR Hardware PWM-channels, **especially when system is very busy**.  The ISR PWM-channels is **running exactly according to corresponding programmed periods and duty-cycles**
 
 
-```
+```cpp
 Starting ISR_16_PWMs_Array_Complex on NUCLEO_L552ZE_Q
 STM32_SLOW_PWM v1.2.3
 [PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 110000000
@@ -618,7 +621,7 @@ PWM Channel : 15, programmed Period (uS): 20000, actual (uS) : 20000, programmed
 The following is the sample terminal output when running example [ISR_16_PWMs_Array_Complex](examples/ISR_16_PWMs_Array_Complex) on **BLUEPILL_F103CB** to demonstrate how to use multiple PWM channels with complex callback functions, the accuracy of ISR Hardware PWM-channels, **especially when system is very busy**.  The ISR PWM-channels is **running exactly according to corresponding programmed periods and duty-cycles**
 
 
-```
+```cpp
 Starting ISR_16_PWMs_Array_Complex on BLUEPILL_F103CB
 STM32_SLOW_PWM v1.2.3
 [PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 72000000
@@ -682,7 +685,7 @@ PWM Channel : 15, programmed Period (uS): 20000, actual (uS) : 19984, programmed
 
 The following is the sample terminal output when running example [ISR_Modify_PWM](examples/ISR_Modify_PWM) on **NUCLEO_F767ZI** to demonstrate how to modify PWM settings on-the-fly without deleting the PWM channel
 
-```
+```cpp
 Starting ISR_Modify_PWM on NUCLEO_F767ZI
 STM32_SLOW_PWM v1.2.3
 [PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 216000000 , Timer Clock Frequency = 1000000.00
@@ -712,7 +715,7 @@ Channel : 0	    Period : 5000		OnTime : 50	Start_Time : 142032668
 
 The following is the sample terminal output when running example [ISR_Changing_PWM](examples/ISR_Changing_PWM) on **NUCLEO_F767ZI** to demonstrate how to modify PWM settings on-the-fly by deleting the PWM channel and reinit the PWM channel
 
-```
+```cpp
 Starting ISR_Changing_PWM on NUCLEO_F767ZI
 STM32_SLOW_PWM v1.2.3
 [PWM] STM32TimerInterrupt: Timer Input Freq (Hz) = 216000000 , Timer Clock Frequency = 1000000.00
@@ -803,12 +806,12 @@ If you want to contribute to this project:
 
 ### License
 
-- The library is licensed under [MIT](https://github.com/khoih-prog/STM32_Slow_PWM/blob/master/LICENSE)
+- The library is licensed under [MIT](https://github.com/khoih-prog/STM32_Slow_PWM/blob/main/LICENSE)
 
 ---
 
 ## Copyright
 
-Copyright 2021- Khoi Hoang
+Copyright (c) 2021- Khoi Hoang
 
 

@@ -16,7 +16,7 @@
 #if !( defined(STM32F0) || defined(STM32F1) || defined(STM32F2) || defined(STM32F3)  ||defined(STM32F4) || defined(STM32F7) || \
        defined(STM32L0) || defined(STM32L1) || defined(STM32L4) || defined(STM32H7)  ||defined(STM32G0) || defined(STM32G4) || \
        defined(STM32WB) || defined(STM32MP1) || defined(STM32L5))
-  #error This code is designed to run on STM32F/L/H/G/WB/MP1 platform! Please check your Tools->Board setting.
+#error This code is designed to run on STM32F/L/H/G/WB/MP1 platform! Please check your Tools->Board setting.
 #endif
 
 // These define's must be placed at the beginning before #include "STM32_Slow_PWM.h"
@@ -55,11 +55,11 @@ volatile uint64_t startMicros = 0;
 
 // Depending on the board, you can select H7 Hardware Timer from TIM1-TIM22
 // If you select a Timer not correctly, you'll get a message from compiler
-// 'TIMxx' was not declared in this scope; did you mean 'TIMyy'? 
+// 'TIMxx' was not declared in this scope; did you mean 'TIMyy'?
 
 // STM32 OK       : TIM1, TIM4, TIM7, TIM8, TIM12, TIM13, TIM14, TIM15, TIM16, TIM17
 // STM32 Not OK   : TIM2, TIM3, TIM5, TIM6, TIM18, TIM19, TIM20, TIM21, TIM22
-// STM32 No timer : TIM9, TIM10, TIM11. Only for F2, F4 and STM32L1 
+// STM32 No timer : TIM9, TIM10, TIM11. Only for F2, F4 and STM32L1
 // STM32 No timer : TIM18, TIM19, TIM20, TIM21, TIM22
 
 // Init timer TIM1
@@ -108,23 +108,29 @@ int channelNum;
 void setup()
 {
   Serial.begin(115200);
+
   while (!Serial);
 
   delay(2000);
 
-  Serial.print(F("\nStarting ISR_Modify_PWM on ")); Serial.println(BOARD_NAME);
+  Serial.print(F("\nStarting ISR_Modify_PWM on "));
+  Serial.println(BOARD_NAME);
   Serial.println(STM32_SLOW_PWM_VERSION);
 
   // Interval in microsecs
   if (ITimer.attachInterruptInterval(HW_TIMER_INTERVAL_US, TimerHandler))
   {
     startMicros = micros();
-    Serial.print(F("Starting ITimer OK, micros() = ")); Serial.println(startMicros);
+    Serial.print(F("Starting ITimer OK, micros() = "));
+    Serial.println(startMicros);
   }
   else
     Serial.println(F("Can't set ITimer. Select another freq. or timer"));
 
-  Serial.print(F("Using PWM Freq = ")); Serial.print(PWM_Freq1); Serial.print(F(", PWM DutyCycle = ")); Serial.println(PWM_DutyCycle1);
+  Serial.print(F("Using PWM Freq = "));
+  Serial.print(PWM_Freq1);
+  Serial.print(F(", PWM DutyCycle = "));
+  Serial.println(PWM_DutyCycle1);
 
 #if USING_PWM_FREQUENCY
 
